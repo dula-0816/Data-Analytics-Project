@@ -1,0 +1,53 @@
+import sqlite3
+import pandas as pd
+
+# Load cleaned dataset
+df = pd.read_excel("Cleaned_Dataset_Data_Analytics.xlsx")
+
+# Create/connect database
+conn = sqlite3.connect("sales_data.db")
+
+# Create SQL table from dataframe
+df.to_sql("sales", conn, if_exists="replace", index=False)
+
+# Query 1: Total revenue
+query1 = """
+SELECT SUM(TotalPrice) AS Total_Revenue
+FROM sales;
+"""
+
+result1 = pd.read_sql(query1, conn)
+
+print("\n--- TOTAL REVENUE ---")
+print(result1)
+
+# Query 2: Top selling products
+query2 = """
+SELECT Product, COUNT(*) AS Total_Orders
+FROM sales
+GROUP BY Product
+ORDER BY Total_Orders DESC
+LIMIT 5;
+"""
+
+result2 = pd.read_sql(query2, conn)
+
+print("\n--- TOP SELLING PRODUCTS ---")
+print(result2)
+
+# Query 3: Payment methods
+query3 = """
+SELECT PaymentMethod, COUNT(*) AS Count
+FROM sales
+GROUP BY PaymentMethod;
+"""
+
+result3 = pd.read_sql(query3, conn)
+
+print("\n--- PAYMENT METHODS ---")
+print(result3)
+
+# Close database connection
+conn.close()
+
+print("\nSQL analysis completed successfully!")

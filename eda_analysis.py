@@ -1,0 +1,66 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load cleaned dataset
+df = pd.read_excel("Cleaned_Dataset_Data_Analytics.xlsx")
+
+# Dataset overview
+print("\n--- DATASET OVERVIEW ---")
+print(df.head())
+
+# Dataset information
+print("\n--- DATASET INFO ---")
+df.info()
+
+# Basic statistics
+print("\n--- BASIC STATISTICS ---")
+print(df.describe())
+
+# Total revenue
+print("\nTotal Revenue:")
+print(df["TotalPrice"].sum())
+
+# Average total price
+print("\nAverage Total Price:")
+print(df["TotalPrice"].mean())
+
+# Median total price
+print("\nMedian Total Price:")
+print(df["TotalPrice"].median())
+
+# Most common payment method
+print("\nMost Common Payment Method:")
+print(df["PaymentMethod"].mode()[0])
+
+# Order status count
+print("\n--- ORDER STATUS COUNT ---")
+print(df["OrderStatus"].value_counts())
+
+# Top selling products
+print("\n--- TOP SELLING PRODUCTS ---")
+print(df["Product"].value_counts().head(10))
+
+# Highest sales records
+print("\n--- HIGHEST TOTAL PRICES ---")
+print(df.nlargest(5, "TotalPrice"))
+
+# Product sales analysis
+product_sales = df.groupby("Product")["TotalPrice"].sum()
+
+# Create chart
+product_sales.sort_values(ascending=False).head(10).plot(kind="bar")
+
+plt.title("Top 10 Products by Sales")
+plt.xlabel("Product")
+plt.ylabel("Total Sales")
+plt.xticks(rotation=45)
+
+plt.tight_layout()
+
+# Save chart
+plt.savefig("top_products_sales_chart.png")
+
+# Show chart
+plt.show()
+
+print("\nEDA analysis completed successfully!")
